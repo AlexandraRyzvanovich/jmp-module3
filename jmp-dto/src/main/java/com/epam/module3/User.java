@@ -11,13 +11,9 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;;
 
 @Data
 @NoArgsConstructor
@@ -36,6 +32,4 @@ public class User {
 
   @Column private LocalDate birthday;
 
-//  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-//  private List<Subscription> subscriptionList = new ArrayList<>();
 }

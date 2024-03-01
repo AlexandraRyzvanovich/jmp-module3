@@ -1,6 +1,7 @@
 package com.epam.module3;
 
-import lombok.Data;import org.springframework.hateoas.RepresentationModel;
+import lombok.Data;
+import org.springframework.hateoas.RepresentationModel;
 
 @Data
 public class UserResponseDto extends RepresentationModel<UserResponseDto>{

@@ -24,20 +24,5 @@ custom:
 
 debug: true
 
-#springdoc:
-#  version: '@springdoc.version@'
-#  api-docs:
-#    version: openapi_3_1
-#  swagger-ui:
-#    display-request-duration: true
-#    groups-order: DESC
-#    operationsSorter: method
-#    disable-swagger-default-url: true
-#    use-root-path: true
-#  show-actuator: true
-#  group-configs:
-#      paths-to-match: /users/**
-#  cache:
-#    disabled: true
 openapi:
   dev-url: http://localhost:8089

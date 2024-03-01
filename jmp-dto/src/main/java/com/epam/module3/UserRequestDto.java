@@ -1,8 +1,7 @@
 package com.epam.module3;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.time.LocalDate;
 
