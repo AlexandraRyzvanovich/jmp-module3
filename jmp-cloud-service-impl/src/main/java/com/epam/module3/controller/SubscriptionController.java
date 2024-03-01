@@ -2,17 +2,12 @@ package com.epam.module3.controller;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import com.epam.module3.CustomMapping;
 import com.epam.module3.Subscription;
-import com.epam.module3.SubscriptionConverter;
 import com.epam.module3.SubscriptionRequestDto;
 import com.epam.module3.SubscriptionResponseDto;
 import com.epam.module3.SubscriptionService;
 import com.epam.module3.UserService;
-import com.epam.module3.service.UserServiceImpl;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +19,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import static org.springframework.hateoas.server.core.DummyInvocationUtils.methodOn;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
 @RequestMapping("/api/subscriptions")
@@ -45,23 +42,27 @@ public class SubscriptionController {
     Subscription subscriptionRes = subscriptionService.createSubscription(subscription);
     SubscriptionResponseDto subscriptionResponseDto =
         modelMapper.map(subscriptionRes, SubscriptionResponseDto.class);
+    subscriptionResponseDto = addHateoas(subscriptionResponseDto);
     return ResponseEntity.ok().body(subscriptionResponseDto);
   }
 
   @PutMapping("/{id}")
   public ResponseEntity<SubscriptionResponseDto> updateSubscription(
-      @PathVariable long id,  @RequestBody SubscriptionRequestDto subscriptionRequestDto) {
+      @PathVariable long id, @RequestBody SubscriptionRequestDto subscriptionRequestDto) {
     Subscription subscription = modelMapper.map(subscriptionRequestDto, Subscription.class);
     Subscription subscriptionRes = subscriptionService.updateSubscription(id, subscription);
     SubscriptionResponseDto subscriptionResponseDto =
         modelMapper.map(subscriptionRes, SubscriptionResponseDto.class);
+    subscriptionResponseDto = addHateoas(subscriptionResponseDto);
+
     return ResponseEntity.ok().body(subscriptionResponseDto);
   }
 
   @DeleteMapping("/{id}")
   public ResponseEntity deleteSubscription(@PathVariable Long id) {
     subscriptionService.deleteSubscription(id);
-    return new ResponseEntity(HttpStatus.OK);
+
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
   @GetMapping("/{id}")
@@ -69,6 +70,8 @@ public class SubscriptionController {
     Subscription subscription = subscriptionService.getSubscription(id);
     SubscriptionResponseDto subscriptionResponseDto =
         modelMapper.map(subscription, SubscriptionResponseDto.class);
+    subscriptionResponseDto = addHateoas(subscriptionResponseDto);
+
     return ResponseEntity.ok().body(subscriptionResponseDto);
   }
 
@@ -76,6 +79,33 @@ public class SubscriptionController {
   public List<SubscriptionResponseDto> getAllSubscription() {
     return subscriptionService.getAllSubscriptions().stream()
         .map(subscription -> modelMapper.map(subscription, SubscriptionResponseDto.class))
+            .map(this::addHateoas)
         .collect(Collectors.toList());
+  }
+
+  private SubscriptionResponseDto addHateoas(SubscriptionResponseDto subscriptionResponseDto) {
+    return subscriptionResponseDto
+        .add(
+            linkTo(
+                    methodOn(SubscriptionController.class)
+                        .getSubscription(subscriptionResponseDto.getId()))
+                .withSelfRel())
+        .add(
+            linkTo(
+                    methodOn(SubscriptionController.class)
+                        .createSubscription(new SubscriptionRequestDto()))
+                .withRel("create"))
+        .add(
+            linkTo(
+                    methodOn(SubscriptionController.class)
+                        .updateSubscription(
+                            subscriptionResponseDto.getId(), new SubscriptionRequestDto()))
+                .withRel("update"))
+        .add(
+            linkTo(
+                    methodOn(SubscriptionController.class)
+                        .deleteSubscription(subscriptionResponseDto.getId()))
+                .withRel("delete"))
+        .add(linkTo(methodOn(SubscriptionController.class).getAllSubscription()).withRel("all"));
   }
 }

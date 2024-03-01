@@ -2,12 +2,12 @@ package com.epam.module3;
 
 import lombok.Data;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.Setter;import org.springframework.hateoas.RepresentationModel;
 
 import java.time.LocalDate;
 
 @Data
-public class UserRequestDto {
+public class UserRequestDto extends RepresentationModel<UserRequestDto>{
     private Long id;
 
     private String first_name;
