@@ -1,5 +1,6 @@
 package com.epam.module3.controller;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 import com.epam.module3.Subscription;
@@ -7,6 +8,9 @@ import com.epam.module3.SubscriptionRequestDto;
 import com.epam.module3.SubscriptionResponseDto;
 import com.epam.module3.SubscriptionService;
 import com.epam.module3.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +27,7 @@ import static org.springframework.hateoas.server.core.DummyInvocationUtils.metho
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
+@Tag(name = "Subscriptions controller", description = "CRUD for subscriptions")
 @RequestMapping("/api/subscriptions")
 public class SubscriptionController {
   private ModelMapper modelMapper;
@@ -36,6 +41,9 @@ public class SubscriptionController {
   }
 
   @PostMapping
+  @Operation(
+      summary = "Create subscription.",
+      description = "Requires user_id. Date of subscription = today")
   public ResponseEntity<SubscriptionResponseDto> createSubscription(
       @RequestBody SubscriptionRequestDto subscriptionRequestDto) {
     Subscription subscription = modelMapper.map(subscriptionRequestDto, Subscription.class);
@@ -43,12 +51,14 @@ public class SubscriptionController {
     SubscriptionResponseDto subscriptionResponseDto =
         modelMapper.map(subscriptionRes, SubscriptionResponseDto.class);
     subscriptionResponseDto = addHateoas(subscriptionResponseDto);
-    return ResponseEntity.ok().body(subscriptionResponseDto);
+    return ResponseEntity.status(HttpStatus.CREATED).body(subscriptionResponseDto);
   }
 
   @PutMapping("/{id}")
+  @Operation(summary = "Update subscription.", description = "Requires id of subscription")
   public ResponseEntity<SubscriptionResponseDto> updateSubscription(
-      @PathVariable long id, @RequestBody SubscriptionRequestDto subscriptionRequestDto) {
+      @Parameter(description = "Id of subscription", example = "1") @PathVariable long id,
+      @RequestBody SubscriptionRequestDto subscriptionRequestDto) {
     Subscription subscription = modelMapper.map(subscriptionRequestDto, Subscription.class);
     Subscription subscriptionRes = subscriptionService.updateSubscription(id, subscription);
     SubscriptionResponseDto subscriptionResponseDto =
@@ -59,14 +69,18 @@ public class SubscriptionController {
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity deleteSubscription(@PathVariable Long id) {
+  @Operation(summary = "Delete subscription.", description = "Requires id of subscription")
+  public ResponseEntity deleteSubscription(
+      @Parameter(description = "Id of subscription", example = "1") @PathVariable Long id) {
     subscriptionService.deleteSubscription(id);
 
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<SubscriptionResponseDto> getSubscription(@PathVariable Long id) {
+  @Operation(summary = "Get subscription.", description = "Requires id of subscription")
+  public ResponseEntity<SubscriptionResponseDto> getSubscription(
+      @Parameter(description = "Id of subscription", example = "1") @PathVariable Long id) {
     Subscription subscription = subscriptionService.getSubscription(id);
     SubscriptionResponseDto subscriptionResponseDto =
         modelMapper.map(subscription, SubscriptionResponseDto.class);
@@ -76,10 +90,13 @@ public class SubscriptionController {
   }
 
   @GetMapping
+  @Operation(
+      summary = "Get all subscriptions.",
+      description = "Returns all subscriptions with HATEOAS ")
   public List<SubscriptionResponseDto> getAllSubscription() {
     return subscriptionService.getAllSubscriptions().stream()
         .map(subscription -> modelMapper.map(subscription, SubscriptionResponseDto.class))
-            .map(this::addHateoas)
+        .map(this::addHateoas)
         .collect(Collectors.toList());
   }
 

@@ -5,6 +5,7 @@ import com.epam.module3.SubscriptionRepository;
 import com.epam.module3.SubscriptionService;
 import com.epam.module3.User;
 import com.epam.module3.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
@@ -12,17 +13,11 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class SubscriptionServiceImpl implements SubscriptionService {
 
-  @Autowired private final SubscriptionRepository subscriptionRepository;
-  @Autowired private final UserRepository userRepository;
-
-  public SubscriptionServiceImpl(
-      SubscriptionRepository subscriptionRepository, UserRepository userRepository) {
-    super();
-    this.subscriptionRepository = subscriptionRepository;
-    this.userRepository = userRepository;
-  }
+  private final SubscriptionRepository subscriptionRepository;
+  private final UserRepository userRepository;
 
   @Override
   public List<Subscription> getAllSubscriptions() {

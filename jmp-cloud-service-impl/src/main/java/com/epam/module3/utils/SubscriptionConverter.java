@@ -1,9 +1,15 @@
-package com.epam.module3;
+package com.epam.module3.utils;
 
+import com.epam.module3.Subscription;
+import com.epam.module3.SubscriptionRequestDto;
+import com.epam.module3.SubscriptionResponseDto;
+import com.epam.module3.UserService;
 import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class SubscriptionConverter {
   @Autowired private UserService userService;
 

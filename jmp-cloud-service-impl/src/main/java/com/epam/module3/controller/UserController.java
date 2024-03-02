@@ -6,6 +6,8 @@ import com.epam.module3.User;
 import com.epam.module3.UserRequestDto;
 import com.epam.module3.UserResponseDto;
 import com.epam.module3.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +24,7 @@ import static org.springframework.hateoas.server.core.DummyInvocationUtils.metho
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
+@Tag(name = "Users controller", description = "CRUD for users")
 @RequestMapping("/api/users")
 public class UserController {
 
@@ -35,15 +38,17 @@ public class UserController {
   }
 
   @PostMapping
+  @Operation(summary = "Create user.", description = "Requires first_name, last_name, birthdate.")
   public ResponseEntity<UserResponseDto> createUser(@RequestBody UserRequestDto userRequestDto) {
     User user = modelMapper.map(userRequestDto, User.class);
     User userCreated = userService.createUser(user);
     UserResponseDto userResponseDto = modelMapper.map(userCreated, UserResponseDto.class);
     userResponseDto = addHateoas(userResponseDto);
-    return ResponseEntity.ok().body(userResponseDto);
+    return ResponseEntity.status(HttpStatus.CREATED).body(userResponseDto);
   }
 
   @PutMapping("/{id}")
+  @Operation(summary = "Update user.", description = "Requires user id.")
   public ResponseEntity<UserResponseDto> updateUser(
       @PathVariable long id, @RequestBody UserRequestDto userRequestDto) {
     User user = modelMapper.map(userRequestDto, User.class);
@@ -54,6 +59,7 @@ public class UserController {
   }
 
   @DeleteMapping("/{id}")
+  @Operation(summary = "Delete user.", description = "Requires user id.")
   public ResponseEntity deleteUser(@PathVariable(name = "id") Long id) {
     userService.deleteUser(id);
 
@@ -61,6 +67,7 @@ public class UserController {
   }
 
   @GetMapping("/{id}")
+  @Operation(summary = "Get user.", description = "Requires user id.")
   public ResponseEntity<UserResponseDto> getUser(@PathVariable(name = "id") Long id) {
     User user = userService.getUser(id);
     UserResponseDto userResponseDto = modelMapper.map(user, UserResponseDto.class);
@@ -69,6 +76,7 @@ public class UserController {
   }
 
   @GetMapping
+  @Operation(summary = "Get all users.", description = "Returns all users with HATEOAS")
   public List<UserResponseDto> getAllUsers() {
     return userService.getAllUsers().stream()
         .map(user -> modelMapper.map(user, UserResponseDto.class))

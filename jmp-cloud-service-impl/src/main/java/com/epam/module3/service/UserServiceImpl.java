@@ -1,21 +1,19 @@
 package com.epam.module3.service;
 
-import java.util.List;import java.util.Optional;
+import java.util.List;
+import java.util.Optional;
 import com.epam.module3.User;
 import com.epam.module3.UserRepository;
 import com.epam.module3.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-  @Autowired private final UserRepository userRepository;
-
-  public UserServiceImpl(UserRepository userRepository) {
-    super();
-    this.userRepository = userRepository;
-  }
+  private final UserRepository userRepository;
 
   @Override
   public List<User> getAllUsers() {
