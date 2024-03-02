@@ -4,14 +4,15 @@ import com.epam.module3.Subscription;
 import com.epam.module3.SubscriptionRequestDto;
 import com.epam.module3.SubscriptionResponseDto;
 import com.epam.module3.UserService;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class SubscriptionConverter {
-  @Autowired private UserService userService;
+  private final UserService userService;
 
   public Converter<SubscriptionRequestDto, Subscription> requestDtoToEntity =
       new Converter<>() {

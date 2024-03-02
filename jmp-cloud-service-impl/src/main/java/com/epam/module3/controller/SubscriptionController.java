@@ -11,7 +11,7 @@ import com.epam.module3.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.modelmapper.ModelMapper;
+import lombok.RequiredArgsConstructor;import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,18 +27,13 @@ import static org.springframework.hateoas.server.core.DummyInvocationUtils.metho
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
+@RequiredArgsConstructor
 @Tag(name = "Subscriptions controller", description = "CRUD for subscriptions")
 @RequestMapping("/api/subscriptions")
 public class SubscriptionController {
-  private ModelMapper modelMapper;
-  private SubscriptionService subscriptionService;
 
-  @Autowired
-  public SubscriptionController(
-      SubscriptionService subscriptionService, UserService userService, ModelMapper modelMapper) {
-    this.subscriptionService = subscriptionService;
-    this.modelMapper = modelMapper;
-  }
+  private final ModelMapper modelMapper;
+  private final SubscriptionService subscriptionService;
 
   @PostMapping
   @Operation(

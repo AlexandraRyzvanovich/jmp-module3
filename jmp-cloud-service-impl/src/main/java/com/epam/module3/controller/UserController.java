@@ -8,6 +8,7 @@ import com.epam.module3.UserResponseDto;
 import com.epam.module3.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,18 +25,14 @@ import static org.springframework.hateoas.server.core.DummyInvocationUtils.metho
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
+@RequiredArgsConstructor
 @Tag(name = "Users controller", description = "CRUD for users")
 @RequestMapping("/api/users")
 public class UserController {
 
-  @Autowired private ModelMapper modelMapper;
+  private final ModelMapper modelMapper;
 
-  private UserService userService;
-
-  public UserController(UserService userService) {
-    super();
-    this.userService = userService;
-  }
+  private final UserService userService;
 
   @PostMapping
   @Operation(summary = "Create user.", description = "Requires first_name, last_name, birthdate.")

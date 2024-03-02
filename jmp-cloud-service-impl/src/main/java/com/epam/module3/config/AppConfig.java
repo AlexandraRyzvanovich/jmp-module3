@@ -12,7 +12,7 @@ public class AppConfig {
   public ModelMapper modelMapper(SubscriptionConverter subscriptionConverter) {
     ModelMapper mapper = new ModelMapper();
 
-    mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+    mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STANDARD);
     mapper.addConverter(subscriptionConverter.entityToResponseDto);
     mapper.addConverter(subscriptionConverter.requestDtoToEntity);
 
