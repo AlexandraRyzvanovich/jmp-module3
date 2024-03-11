@@ -1,10 +1,12 @@
 package com.epam.module3;
 
-import jakarta.persistence.Id;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.hateoas.RepresentationModel;
 
-@Data
-public class SubscriptionResponseDto {
+@Getter
+@Setter
+public class SubscriptionResponseDto extends RepresentationModel<SubscriptionResponseDto> {
     private Long id;
     private Long user_id;
     private String startDate;

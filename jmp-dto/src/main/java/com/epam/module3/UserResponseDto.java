@@ -1,9 +1,12 @@
 package com.epam.module3;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.hateoas.RepresentationModel;
 
-@Data
-public class UserResponseDto {
+@Getter
+@Setter
+public class UserResponseDto extends RepresentationModel<UserResponseDto> {
     private Long id;
     private String first_name;
     private String last_name;
